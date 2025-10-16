@@ -21,9 +21,9 @@
 		</h1>
 
 		<Toolbar
-				v-model:filter-active="filterActive"
-				v-model:filter-type="filterType"
-				v-model:search-keyword="searchKeyword"
+			v-model:filter-active="filterActive"
+			v-model:filter-type="filterType"
+			v-model:search-keyword="searchKeyword"
 		/>
 
 		<List

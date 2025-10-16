@@ -3,7 +3,7 @@
 		meta: [
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' }
 		],
-		title: 'Fællesoffentlig Bankintegration (FOBI)',
+		title: 'Fællesoffentlig Bankintegration',
 		link: [{ rel: 'icon', href: '/favicon.ico' }],
 		htmlAttrs: { lang: 'da' }
 	})
