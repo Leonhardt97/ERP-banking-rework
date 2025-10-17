@@ -13,6 +13,7 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       DB_DATABASE: data
+      DATABASE_URL: postgresql://root:pass@db:5432/data
 
       BANKING_NAME: Nordea
       BANKING_DOMAIN: https://open.nordea.com
@@ -63,7 +64,7 @@ services:
       POSTGRES_DB: data
       TZ: "Europe/Copenhagen"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/lib/db/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U root -d data -h 127.0.0.1 -p 5432"]
       start_period: 5s
