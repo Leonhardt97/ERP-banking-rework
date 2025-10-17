@@ -1,0 +1,7 @@
+{
+	"editor.tabSize": 3,
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"files.trimTrailingWhitespace": true,
+	"prettier.useEditorConfig": true
+}

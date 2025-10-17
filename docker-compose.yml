@@ -1,0 +1,79 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    environment:
+      DB_USER: root
+      DB_PASS: pass
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: data
+
+      BANKING_NAME: Nordea
+      BANKING_DOMAIN: https://open.nordea.com
+      BANKING_DOMAIN_SHORT: open.nordea.com
+      BANKING_CLIENT_ID: ${PRODUKTIONSKEY}
+      BANKING_CLIENT_SECRET: ${PRODUKTIONSSECRET}
+      BANKING_EIDASPRIVATEKEY: ${PROD_EIDASPRIVATEKEY}
+      BANKING_AGREEMENT_ID: ${PROD_AGREEMENT_ID}
+      BANKING_USEFUL_PARAMETERS: '[["narrative","message"],["counterparty_name","counterparty_address"],"type_description"]'
+      BANKING_CLOSED_DATES: '["2025-01-01","2025-04-17","2025-04-18","2025-04-21","2025-05-29","2025-05-30","2025-06-05","2025-06-09","2025-12-24","2025-12-25","2025-12-26","2025-12-31"]'
+      AUTH_ID: ${PROD_AUTH_ID}
+      AUTH_NAME: ${AUTH_NAME}
+      AUTH_SENDER_ADDRESS: ${SENDER_ADRESS}
+
+      SFTP_URL: ${SFTP_URL}
+      SFTP_USERNAME: ${SFTP_USERNAME}
+      SFTP_PASSWORD: ${SFTP_PASSWORD}
+      SFTP_SEND_DIR: /data/output/
+      SFTP_RECEIVE_DIR: /fra-randers/
+
+      ERP_NAME: KMD Opus
+      ERP_DATAPROVIDERID: 6ROB
+      ERP_DATAPROVIDERIDCODE: "730"
+      ERP_COMPCODE: "0020"
+      ERP_PRODENV: P04
+      ERP_INTEGRATION_BOOL: "true"
+      ERP_FILE_HEADERS: "Artskonto, Omkostningssted, PSP-element, Profitcenter, Ordre, Debet/kredit, Beløb, Næste agent, Tekst, Betalingsart, Påligningsår, Betalingsmodtagernr., Betalingsmodtagernr.kode, Ydelsesmodtagernr., Ydelsesmodtagernr.kode, Ydelsesperiode fra, Ydelsesperiode til, Oplysningspligtnr., Oplysningspligtmodtagernr.kode, Oplysningspligtkode, Netværk, Operation, Mængde, Mængdeenhed, Referencenøgle"
+      ERP_IMPORTRULES_PATH: /data/konteringsregler/konteringsregler.csv
+
+      FLOWS: "/data/flows.json"
+
+      TZ: "Europe/Copenhagen"
+
+    # Development mounts so HMR works: mount project and keep container's node_modules
+    volumes:
+      - ./:/app:cached
+      - /app/node_modules
+
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: data
+      TZ: "Europe/Copenhagen"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d data -h 127.0.0.1 -p 5432"]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+
+networks:
+  nuxt_stack:
+    name: nuxt_stack
+
+volumes:
+  db_data:
